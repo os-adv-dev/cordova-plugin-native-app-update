@@ -33,13 +33,13 @@ static NSString *const TAG = @"CDVAppUpdate";
     BOOL update_force = NO;
 
     if (currentVersion) {
-        {resultObj setObject:currentVersion forKey:@"current_version"];
+        [resultObj setObject:currentVersion forKey:@"current_version"];
     } else {
          [resultObj setObject:@"" forKey:@"current_version"]; // Assign an empty string to prevent crashes
     }
 
-     if (appId) {
-        {resultObj setObject:appId forKey:@"app_Id"];
+     if (appID) {
+        {[resultObj setObject:appID forKey:@"app_Id"];
     } else {
          [resultObj setObject:@"" forKey:@"app_Id"]; // Assign an empty string to prevent crashes
     }
