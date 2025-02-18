@@ -69,8 +69,6 @@ public class CDVAppUpdate extends CordovaPlugin {
     /* Private variables */
     private AppUpdateManager appUpdateManager;
     private int updateAvailable = 0;
-    private String appStoreVersion = "";
-    private String currentVersion = "";
     private int forceUpdate = 0;
     private final int MINIMUM_SDK = 21;
 
@@ -178,13 +176,6 @@ public class CDVAppUpdate extends CordovaPlugin {
     private void needsUpdate(final String forceApi, final String forceResponseKey) {
         // Start the task of getting the in-app update info
         Task<AppUpdateInfo> appUpdateInfoTask = appUpdateManager.getAppUpdateInfo();
-
-        try {
-            PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-            currentVersion = pInfo.versionName;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
         
         // Add a listener to handle when the app update info is returned successfully
         appUpdateInfoTask.addOnSuccessListener(appUpdateInfo -> {
@@ -192,9 +183,6 @@ public class CDVAppUpdate extends CordovaPlugin {
                 // There is an update available
                 updateAvailable = 1;
 
-                if (appUpdateInfo.availableVersionCode() > 0) {
-                    appStoreVersion = String.valueOf(appUpdateInfo.availableVersionCode());
-                }
                 // Check if the app update should be forced
                 checkAppUpdateType(forceApi, forceResponseKey, appUpdateInfo);
             } else {
@@ -273,8 +261,6 @@ public class CDVAppUpdate extends CordovaPlugin {
         try {
             // Add the values to be returned
             resultObj.put("update_available", updateAvailable);
-            resultObj.put("appStore_version", appStoreVersion);
-            resultObj.put("current_version", currentVersion);
             // Log the update check completed
             Log.v(TAG, "App Update Check Complete");
 
