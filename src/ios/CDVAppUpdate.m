@@ -39,10 +39,10 @@ static NSString *const TAG = @"CDVAppUpdate";
     }
 
      if (appID) {
-        {[resultObj setObject:appID forKey:@"app_Id"];
-    } else {
-         [resultObj setObject:@"" forKey:@"app_Id"]; // Assign an empty string to prevent crashes
-    }
+        [resultObj setObject:appID forKey:@"app_Id"];
+     } else {
+        [resultObj setObject:@"" forKey:@"app_Id"]; // Assign an empty string to prevent crashes
+     }
         
     NSLog(@"%@ Checking for app update", TAG);
     if ([lookup[@"resultCount"] integerValue] == 1) {
