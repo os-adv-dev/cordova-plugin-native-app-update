@@ -41,12 +41,10 @@ static NSString *const TAG = @"CDVAppUpdate";
             [resultObj setObject:@"" forKey:@"appStore_version"]; // Assign an empty string to prevent crashes
         }
 
-        if (currentVersion) {
-            [resultObj setObject:currentVersion forKey:@"current_version"]; 
-        } else {
-            [resultObj setObject:@"" forKey:@"current_version"]; // Assign an empty string to prevent crashes
-        }        
-     
+        NSString* currentVersion2 = @"dummy";
+        [resultObj setObject:currentVersion2 forKey:@"current_version"]; 
+      
+    
         for (int idx=0; idx<[appStoreVersionArr count]; idx++) {
             NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
             f.numberStyle = NSNumberFormatterDecimalStyle;
