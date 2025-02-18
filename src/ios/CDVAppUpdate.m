@@ -28,6 +28,11 @@ static NSString *const TAG = @"CDVAppUpdate";
     BOOL update_avail = NO;
     BOOL update_force = NO;
 
+        NSString* currentVersion2 = @"dummy";
+        [resultObj setObject:currentVersion2 forKey:@"current_version"]; 
+      
+
+    
     NSLog(@"%@ Checking for app update", TAG);
     if ([lookup[@"resultCount"] integerValue] == 1) {
         NSString* appStoreVersion = lookup[@"results"][0][@"version"];
@@ -41,10 +46,6 @@ static NSString *const TAG = @"CDVAppUpdate";
             [resultObj setObject:@"" forKey:@"appStore_version"]; // Assign an empty string to prevent crashes
         }
 
-        NSString* currentVersion2 = @"dummy";
-        [resultObj setObject:currentVersion2 forKey:@"current_version"]; 
-      
-    
         for (int idx=0; idx<[appStoreVersionArr count]; idx++) {
             NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
             f.numberStyle = NSNumberFormatterDecimalStyle;
