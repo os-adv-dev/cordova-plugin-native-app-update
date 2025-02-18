@@ -35,9 +35,18 @@ static NSString *const TAG = @"CDVAppUpdate";
         NSString* currentVersion = infoDictionary[@"CFBundleShortVersionString"];
         NSArray* currentVersionArr = [currentVersion componentsSeparatedByString:@"."];
 
-        [resultObj setObject:appStoreVersion forKey:@"appStore_version"]; 
-        [resultObj setObject:currentVersion forKey:@"current_version"]; 
+        if (appStoreVersion) {
+            [resultObj setObject:appStoreVersion forKey:@"appStore_version"];
+        } else {
+            [resultObj setObject:@"" forKey:@"appStore_version"]; // Assign an empty string to prevent crashes
+        }
 
+        if (currentVersion) {
+            [resultObj setObject:currentVersion forKey:@"current_version"]; 
+        } else {
+            [resultObj setObject:@"" forKey:@"current_version"]; // Assign an empty string to prevent crashes
+        }        
+     
         for (int idx=0; idx<[appStoreVersionArr count]; idx++) {
             NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
             f.numberStyle = NSNumberFormatterDecimalStyle;
