@@ -8,17 +8,13 @@
 #import <Cordova/CDVViewController.h>
 
 static NSString *const TAG = @"CDVAppUpdate";
-        
+
 @implementation CDVAppUpdate
 
 -(void) needsUpdate:(CDVInvokedUrlCommand*)command
 {
-
     NSDictionary* infoDictionary = [[NSBundle mainBundle] infoDictionary];
     NSString* appID = infoDictionary[@"CFBundleIdentifier"];
-    NSString* currentVersion = infoDictionary[@"CFBundleShortVersionString"];
-    NSArray* currentVersionArr = [currentVersion componentsSeparatedByString:@"."];
-    
     NSString* force_api = nil;
     NSString* force_key = nil;
     if ([command.arguments count] > 0) {
@@ -32,28 +28,12 @@ static NSString *const TAG = @"CDVAppUpdate";
     BOOL update_avail = NO;
     BOOL update_force = NO;
 
-    if (currentVersion) {
-        [resultObj setObject:currentVersion forKey:@"current_version"];
-    } else {
-         [resultObj setObject:@"" forKey:@"current_version"]; // Assign an empty string to prevent crashes
-    }
-
-     if (appID) {
-        [resultObj setObject:appID forKey:@"app_Id"];
-     } else {
-        [resultObj setObject:@"" forKey:@"app_Id"]; // Assign an empty string to prevent crashes
-     }
-        
     NSLog(@"%@ Checking for app update", TAG);
     if ([lookup[@"resultCount"] integerValue] == 1) {
         NSString* appStoreVersion = lookup[@"results"][0][@"version"];
         NSArray* appStoreVersionArr = [appStoreVersion componentsSeparatedByString:@"."];
-
-        if (appStoreVersion) {
-            [resultObj setObject:appStoreVersion forKey:@"appStore_version"];
-        } else {
-            [resultObj setObject:@"" forKey:@"appStore_version"]; // Assign an empty string to prevent crashes
-        }
+        NSString* currentVersion = infoDictionary[@"CFBundleShortVersionString"];
+        NSArray* currentVersionArr = [currentVersion componentsSeparatedByString:@"."];
 
         for (int idx=0; idx<[appStoreVersionArr count]; idx++) {
             NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
