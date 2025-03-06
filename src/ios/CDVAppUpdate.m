@@ -35,12 +35,27 @@ static NSString *const TAG = @"CDVAppUpdate";
         NSString* currentVersion = infoDictionary[@"CFBundleShortVersionString"];
         NSArray* currentVersionArr = [currentVersion componentsSeparatedByString:@"."];
 
+        // Remove anything in parentheses
+        NSRange range = [appStoreVersion rangeOfString:@"("];
+        if (range.location != NSNotFound) {
+            appStoreVersion = [appStoreVersion substringToIndex:range.location];
+        }
+
+        // Trim whitespace
+        appStoreVersion = [appStoreVersion stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+
         for (int idx=0; idx<[appStoreVersionArr count]; idx++) {
             NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
             f.numberStyle = NSNumberFormatterDecimalStyle;
             NSNumber* appStoreVersionNumber = [f numberFromString:[appStoreVersionArr objectAtIndex:idx]];
             NSNumber* currentVersionNumber = [f numberFromString:[currentVersionArr objectAtIndex:idx]];
 
+            // Safety check for NSNumberFormatter
+            if (!appStoreVersionNumber || !currentVersionNumber) {
+                NSLog(@"Error: Failed to parse version numbers");
+                continue;
+            }
+            
             if ([currentVersionNumber compare:appStoreVersionNumber] == NSOrderedAscending) {
                 NSLog(@"%@ Need to update [%@ != %@]", TAG, appStoreVersion, currentVersion);
                 if ([force_api length] > 0) {
@@ -59,7 +74,6 @@ static NSString *const TAG = @"CDVAppUpdate";
         }
     }
 
-    
     [resultObj setObject:[NSNumber numberWithBool:update_avail] forKey:@"update_available"];
 
     CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:resultObj];
