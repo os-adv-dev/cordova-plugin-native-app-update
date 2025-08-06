@@ -23,7 +23,7 @@ static NSString *const TAG = @"CDVAppUpdate";
         force_key = [command.arguments objectAtIndex:1];
     }
     
-    NSURL* url = [NSURL URLWithString:[NSString stringWithFormat:@"http://itunes.apple.com/lookup?country=gb&bundleId=%@", appID]];
+    NSURL* url = [NSURL URLWithString:[NSString stringWithFormat:@"https://itunes.apple.com/lookup?country=gb&bundleId=%@", appID]];
     NSData* data = [NSData dataWithContentsOfURL:url];
 
     if (!data) {
@@ -31,9 +31,11 @@ static NSString *const TAG = @"CDVAppUpdate";
         return;
     }
     
-    NSDictionary* lookup = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-
+    NSError* jsonError = nil;
+    NSDictionary* lookup = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
+    
     if (!lookup) {
+        NSLog(@"JSON parse error: %@", jsonError.localizedDescription);
         return;
     }
     
