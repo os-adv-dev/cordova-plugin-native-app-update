@@ -17,13 +17,26 @@ static NSString *const TAG = @"CDVAppUpdate";
     NSString* appID = infoDictionary[@"CFBundleIdentifier"];
     NSString* force_api = nil;
     NSString* force_key = nil;
+    
     if ([command.arguments count] > 0) {
         force_api = [command.arguments objectAtIndex:0];
         force_key = [command.arguments objectAtIndex:1];
     }
+    
     NSURL* url = [NSURL URLWithString:[NSString stringWithFormat:@"http://itunes.apple.com/lookup?country=gb&bundleId=%@", appID]];
     NSData* data = [NSData dataWithContentsOfURL:url];
+
+    if (!data) {
+        NSLog(@"Failed to retrieve data from URL: %@", url);
+        return;
+    }
+    
     NSDictionary* lookup = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+
+    if (!lookup) {
+        return;
+    }
+    
     NSMutableDictionary *resultObj = [[NSMutableDictionary alloc]initWithCapacity:10];
     BOOL update_avail = NO;
     BOOL update_force = NO;
